@@ -1,13 +1,11 @@
 import datetime
 import os
-import urllib
-import webbrowser
 from tkinter import *
 
 import speech_recognition
-import wikipedia
 
 from Speak import speak
+import Actions
 
 flag = True
 
@@ -24,26 +22,27 @@ def wish_me(txt):
 
 
 def take_command(txt):
-    r = speech_recognition.Recognizer()
-    with speech_recognition.Microphone() as source:
-        print('Listening....')
-        txt.insert(INSERT, 'Listening....\n')
-        txt.update()
-        r.pause_threshold = 1
-        audio = r.listen(source)
-    try:
-        print('Recognizing...')
-        txt.insert(INSERT, 'Recognizing...\n')
-        txt.update()
-        query = r.recognize_google(audio, language='en-in')
-        print('User : ' + query + '\n')
-        txt.insert(INSERT, 'User : ' + query + '\n')
-        txt.update()
-    except Exception as e:
-        print(e)
-        speak("Say again please...", txt)
-        return 'none'
-    return query
+    while True:
+        r = speech_recognition.Recognizer()
+        with speech_recognition.Microphone() as source:
+            print('Listening....')
+            txt.insert(INSERT, 'Listening....\n')
+            txt.update()
+            r.pause_threshold = 1
+            audio = r.listen(source)
+        try:
+            print('Recognizing...')
+            txt.insert(INSERT, 'Recognizing...\n')
+            txt.update()
+            query = r.recognize_google(audio, language='en-in')
+            print('User : ' + query + '\n')
+            txt.insert(INSERT, 'User : ' + query + '\n')
+            txt.update()
+        except Exception as e:
+            print(e)
+            speak("Say again please...", txt)
+            continue
+        return query
 
 
 def listen(txt):
@@ -51,33 +50,38 @@ def listen(txt):
     if flag:
         wish_me(txt)
         flag = False
+
+    dictionary = dict([('google', ['google', 'search', 'web', 'worldwideweb', 'internet']),
+                       ('youtube', ['youtube', 'play', 'video', 'videos', 'search', 'entertainment']),
+                       ('wikipedia', ['wikipedia', 'encyclopedia', 'search', 'article', 'articles']),
+                       ('weather', ['weather', 'temperature', 'climate']),
+                       ('daydatetime', ['day', 'date', 'time']),
+                       ('horoscope', ['horoscope', 'fortune', 'luck']),
+                       ('joke', ['joke', 'jokes', 'fun', 'funny']),
+                       ('bye', ['goodbye', 'byebye', 'sayonara', 'exit', 'close', 'tata'])])
+
+    score = dict([('google', 0),
+                  ('youtube', 0),
+                  ('wikipedia', 0),
+                  ('weather', 0),
+                  ('daydatetime', 0),
+                  ('horoscope', 0),
+                  ('joke', 0),
+                  ('bye', 0)])
+
     query = take_command(txt).lower()
-    if 'youtube' in query:
-        speak('Opening Youtube', txt)
-        query = query.replace("youtube", "").strip().replace(" ", "+")
-        htm_content = urllib.request.urlopen('https://www.youtube.com/results?search_query=' + query)
-        results = re.findall('href=\"\\/watch\\?v=(.{11})', htm_content.read().decode())
-        webbrowser.open("https://www.youtube.com/watch?v=" + results[0])
-    elif 'wikipedia' in query:
-        speak('searching wikipedia', txt)
-        query = query.replace("wikipedia", "").strip()
-        results = wikipedia.summary(query, sentences=2)
-        speak('according to wikipedia', txt)
-        print(results)
-        speak(results, txt)
-    elif 'google' in query:
-        speak("Searching Google", txt)
-        query = query.replace("google", "").strip()
-        webbrowser.open('https://www.google.com/search?q=' + query)
-    elif 'play movie' in query:
-        speak('playing movie active measures .', txt)
-        movie_dir = 'G:\Movies\Active Measures'
-        movies = os.listdir(movie_dir)
-        os.startfile(os.path.join(movie_dir, movies[0]))
-    elif 'bye' in query:
-        speak('Goodbye', txt)
-        exit()
-    elif query == 'none':
-        pass
+    words = query.split(' ')
+
+    for word in words:
+        for keyword in dictionary:
+            for value in dictionary.get(keyword):
+                if word == value:
+                    score[keyword] += 1
+                    break
+
+    max_score = max(score, key=score.get)
+
+    if score.get(max_score) == 0:
+        Actions.general_conversation(query, txt)
     else:
-        speak('I am not sure about this', txt)
+        getattr(Actions, max_score)(query, txt)
