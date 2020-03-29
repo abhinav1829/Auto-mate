@@ -26,9 +26,9 @@ def initialize():
     f_automate = Frame(f)
     f_automate.grid(row=1, column=0, sticky=N + S + E + W)
 
-    initf_automate(f_automate)
-    initf_settings(f_settings)
     initf_about(f_about)
+    initf_settings(f_settings)
+    initf_automate(f_automate)
 
     Grid.rowconfigure(f, 0, weight=1)
     Grid.columnconfigure(f, 0, weight=1)

@@ -5,6 +5,7 @@ tts = Dispatch("SAPI.SpVoice")
 
 
 def speak(query, txt):
+    global tts
     txt.insert(INSERT, 'Automate : ')
     txt.insert(INSERT, query)
     txt.insert(INSERT, '\n')

@@ -3,23 +3,30 @@ import urllib
 import webbrowser
 from datetime import datetime
 from tkinter import *
-import GeneralConversations
 
 import pyowm
 import wikipedia as wiki
 from horoscope_generator import HoroscopeGenerator
 
+import GeneralConversations
+from Input import take_command
 from Speak import speak
+
+media_name = ''
+media_flag = False
+
+movie_list = dict()
+movie_count = 1
 
 joke_count = 0
 
 
 def general_conversation(query, txt):
-    dictionary = dict([('who_are_you', ['who', 'are', 'you']),
+    dictionary = dict([('who_are_you', ['who', 'are', 'you', 'identification']),
                        ('toss_coin', ['heads', 'tails', 'flip', 'toss', 'coin']),
                        ('how_am_i', ['how', 'am', 'i', 'look', 'looking']),
                        ('who_am_i', ['who', 'am', 'i']),
-                       ('where_born', ['how', 'where', 'you', 'born', 'birth']),
+                       ('where_born', ['how', 'where', 'you', 'born', 'birth', 'who', 'made', 'created']),
                        ('how_are_you', ['how', 'are', 'you']),
                        ('are_you_up', ['you', 'up']),
                        ('love_you', ['love', 'you']),
@@ -52,17 +59,92 @@ def general_conversation(query, txt):
         getattr(GeneralConversations, max_score)(query, txt)
 
 
+def search_song(root, txt):
+    global media_name, media_flag
+    for file in os.listdir(root):
+        cur_path = os.path.join(root, file)
+        if os.path.isdir(cur_path):
+            search_song(cur_path, txt)
+        else:
+            if file.endswith('.mp3'):
+                if re.search(media_name, file.lower()):
+                    media_flag = True
+                    speak('Playing song ' + media_name, txt)
+                    os.startfile(cur_path)
+                    return
+
+
+def search_video(root, txt):
+    global media_name, media_flag
+    for file in os.listdir(root):
+        cur_path = os.path.join(root, file)
+        if os.path.isdir(cur_path):
+            search_video(cur_path, txt)
+        else:
+            if file.endswith('.mp4') or file.endswith('.mkv') or file.endswith('.avi'):
+                if re.search(media_name, file.lower()):
+                    media_flag = True
+                    speak('Playing video ' + media_name, txt)
+                    os.startfile(cur_path)
+                    return
+
+
+def playmedia(query, txt):
+    from Settings_Frame import music_path, video_path
+    global media_name, media_flag
+    media_flag = False
+    media_name = query.replace('play', '').replace('mp3', '').replace('song', '').replace('video', '').lower().strip()
+    print(media_name)
+    if 'mp3' in query or 'song' in query:
+        search_song(music_path.get(), txt)
+    else:
+        search_video(video_path.get(), txt)
+    if not media_flag:
+        speak('Sorry, the media is not available.', txt)
+
+
+def search_movie(root, txt):
+    global movie_list, movie_count
+    for file in os.listdir(root):
+        cur_path = os.path.join(root, file)
+        if os.path.isdir(cur_path):
+            search_movie(cur_path, txt)
+        elif file.endswith('.mp4') or file.endswith('.mkv') or file.endswith('.avi') or file.endswith('webm'):
+            txt.insert(INSERT, str(movie_count) + ' ' + file + '\n')
+            txt.update()
+            movie_list[movie_count] = cur_path
+            movie_count += 1
+
+
+def movie(query, txt):
+    from Settings_Frame import movie_path
+    global movie_count
+    movie_count = 0
+    search_movie(movie_path.get(), txt)
+    if movie_count == 0:
+        speak('The movies folder is empty.')
+        return
+    while True:
+        try:
+            speak('Select a number', txt)
+            os.startfile(movie_list[int(take_command(txt))])
+        except KeyError:
+            speak('Invalid number. Please select a number in the given range.', txt)
+            continue
+        return
+
+
 def google(query, txt):
     speak("Searching Google", txt)
-    query = query.replace("google", "").strip()
+    query = query.replace('search', '').replace('google', '').replace('for', '').strip().replace(" ", "+")
     webbrowser.open('https://www.google.com/search?q=' + query)
 
 
 def youtube(query, txt):
     speak('Opening Youtube', txt)
-    query = query.replace("youtube", "").strip().replace(" ", "+")
+    query = query.replace('youtube', '').replace('play', '').replace('video', '').strip().replace(" ", "+")
     htm_content = urllib.request.urlopen('https://www.youtube.com/results?search_query=' + query)
-    results = re.findall('href=\"\\/watch\\?v=(.{11})', htm_content.read().decode())
+    results = re.findall('href=\"/watch\\?v=(.{11})', htm_content.read().decode())
     webbrowser.open("https://www.youtube.com/watch?v=" + results[0])
 
 
