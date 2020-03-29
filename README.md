@@ -3,10 +3,10 @@ Automate daily tasks just by speaking
 
 Features :-
 
-•	Play Youtube
-
-•	Search Wikipedia
-
-•	Manage expenses
-
 •	Google search
+•	Play Youtube
+•	Search Wikipedia
+•	Play local media
+•	Weather Report
+•	Horoscope
+•	General Conversations
