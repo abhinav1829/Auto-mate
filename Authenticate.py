@@ -1,68 +1,65 @@
 from tkinter import *
+import sqlite3
 
 flag = False
 login_root = Tk()
 
 
 def check_credentials(username_entry, password_entry):
-    file = open('users', 'r')
-    entries = file.readlines()
-    file.close()
-
     global flag
     flag = False
-    for entry in entries:
-        if username_entry == entry.split(' ')[0]:
+    con = sqlite3.connect('automate.db')
+    cursor = con.cursor()
+    rows = cursor.execute('SELECT username,password FROM users WHERE username="' + username_entry + '"').fetchall()
+    if len(rows) == 0:
+        print('No such account')
+    elif len(rows) == 1:
+        if rows[0][1] == password_entry:
             flag = True
-            if password_entry == entry.split(' ')[1].split('\n')[0]:
-                login_root.destroy()
-                return
-            break
-    if flag:
-        print('Invalid password')
-        flag = False
+            login_root.destroy()
+            cursor.execute('DELETE FROM current_user')
+            cursor.execute('INSERT INTO current_user SELECT * FROM users WHERE username = "' + username_entry + '"')
+            con.commit()
+        else:
+            print('Incorrect password')
     else:
-        print('Invalid username')
+        print('Database error: More than one users with same username found!')
+    con.close()
 
 
 def new_entry(username_entry, password_entry):
-    file = open('users', 'r')
-    entries = file.readlines()
-    file.close()
-
-    for entry in entries:
-        if username_entry == entry.split(' ')[0]:
-            print('User already exists')
-            return
-
-    file = open('users', 'a')
-    file.write(username_entry + " " + password_entry + "\n")
-    file.close()
-    print('Account created')
+    con = sqlite3.connect('automate.db')
+    cursor = con.cursor()
+    rows = cursor.execute('SELECT username,password FROM users WHERE username="' + username_entry + '"').fetchall()
+    if len(rows) == 0:
+        cursor.execute(
+            'INSERT INTO users (username,password) VALUES ("' + username_entry + '", "' + password_entry + '")'
+        )
+        con.commit()
+        print('Account created')
+    elif len(rows) == 1:
+        print('User already exists')
+    else:
+        print('Database error: More than one users with same username found!')
+    con.close()
 
 
 def del_entry(username_entry, password_entry):
-    file = open('users', 'r')
-    entries = file.readlines()
-    file.close()
-
-    global flag
-    flag = False
-    for entry in entries:
-        if username_entry == entry.split(' ')[0] and password_entry == entry.split(' ')[1].split('\n')[0]:
-            entries.remove(entry)
-            print('Account deleted')
-            flag = True
-            break
-    if not flag:
+    con = sqlite3.connect('automate.db')
+    cursor = con.cursor()
+    rows = cursor.execute('SELECT username,password FROM users WHERE username="' + username_entry + '"').fetchall()
+    if len(rows) == 0:
         print('No such account')
-        return
-
-    flag = False
-    file = open('users', 'w')
-    for entry in entries:
-        file.write(entry)
-    file.close()
+    elif len(rows) == 1:
+        if rows[0][1] == password_entry:
+            cursor.execute('DELETE FROM users WHERE username="' + username_entry + '"')
+            con.commit()
+            print('Account deleted')
+        else:
+            print('Incorrect password')
+    else:
+        print('Database error: More than one users with same username found!')
+    con.close()
 
 
 def login_initialize():

@@ -5,6 +5,8 @@ from tkinter import filedialog
 
 import psutil
 
+voices = ''
+
 music_path = ''
 video_path = ''
 movie_path = ''
@@ -31,8 +33,18 @@ def change_directory(i):
         movie_path.set(filedialog.askdirectory(title='Select a movie directory'))
 
 
+def change_voice(*args):
+    global voices
+    from Speak import tts
+    gender = voices.get()
+    if gender == 'Male':
+        tts.Voice = tts.GetVoices().Item(0)
+    elif gender == 'Female':
+        tts.Voice = tts.GetVoices().Item(1)
+
+
 def initf_settings(f_settings):
-    global music_path, video_path, movie_path
+    global music_path, video_path, movie_path, voices
 
     Grid.rowconfigure(f_settings, 0, weight=1)
     Grid.columnconfigure(f_settings, 0, weight=1)
@@ -53,9 +65,9 @@ def initf_settings(f_settings):
         'Light Theme',
         'Dark Theme'
     ]
-    var = StringVar(f1)
-    var.set(options1[0])
-    s1 = OptionMenu(f1, var, *options1)
+    themes = StringVar(f1)
+    themes.set(options1[0])
+    s1 = OptionMenu(f1, themes, *options1)
     s1.grid(row=0, column=1, sticky=E)
 
     Grid.rowconfigure(control_panel, 1, weight=0)
@@ -70,9 +82,10 @@ def initf_settings(f_settings):
         'Male',
         'Female'
     ]
-    var = StringVar(f2)
-    var.set(options2[0])
-    s2 = OptionMenu(f2, var, *options2)
+    voices = StringVar(f2)
+    voices.set(options2[0])
+    voices.trace('w', change_voice)
+    s2 = OptionMenu(f2, voices, *options2)
     s2.grid(row=0, column=1, sticky=E)
 
     music_path = StringVar()

@@ -25,14 +25,15 @@ def listen(txt):
         flag = False
 
     dictionary = dict([('playmedia', ['play', 'music', 'mp3', 'song', 'video']),
-                       ('movie', ['play', 'movie']),
-                       ('google', ['list', 'google', 'search', 'web', 'worldwideweb', 'internet']),
+                       ('movie', ['play', 'movie', 'movies']),
+                       ('google', ['google', 'search', 'web', 'worldwideweb', 'internet']),
                        ('youtube', ['youtube', 'play', 'video', 'videos', 'search', 'entertainment']),
                        ('wikipedia', ['wikipedia', 'encyclopedia', 'search', 'article', 'articles']),
                        ('weather', ['weather', 'temperature', 'climate']),
                        ('daydatetime', ['day', 'date', 'time']),
                        ('horoscope', ['horoscope', 'fortune', 'luck']),
                        ('joke', ['joke', 'jokes', 'fun', 'funny']),
+                       ('note', ['note', 'notes']),
                        ('bye', ['goodbye', 'bye', 'byebye', 'sayonara', 'exit', 'close', 'tata'])])
 
     score = dict([('playmedia', 0),
@@ -44,10 +45,15 @@ def listen(txt):
                   ('daydatetime', 0),
                   ('horoscope', 0),
                   ('joke', 0),
+                  ('note', 0),
                   ('bye', 0)])
 
     query = take_command(txt).lower()
     words = query.split(' ')
+
+    if words[0] == 'note' or words[0] == 'memorize':
+        Actions.note(query, txt)
+        return
 
     for word in words:
         for keyword in dictionary:
