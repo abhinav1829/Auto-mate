@@ -23,11 +23,11 @@ joke_count = 0
 
 
 def general_conversation(query, txt):
-    dictionary = dict([('who_are_you', ['what', 'name', 'who', 'are', 'you', 'identification']),
+    dictionary = dict([('who_are_you', ['name', 'who', 'are', 'you', 'identification']),
                        ('toss_coin', ['heads', 'tails', 'flip', 'toss', 'coin']),
                        ('how_am_i', ['how', 'am', 'i', 'look', 'looking']),
                        ('who_am_i', ['who', 'am', 'i']),
-                       ('where_born', ['how', 'where', 'you', 'born', 'birth', 'who', 'made', 'created']),
+                       ('where_born', ['born', 'birth', 'made', 'created']),
                        ('how_are_you', ['how', 'are', 'you']),
                        ('are_you_up', ['you', 'up']),
                        ('love_you', ['love', 'you']),
@@ -100,7 +100,6 @@ def playmedia(query, txt):
     global media_name, media_flag
     media_flag = False
     media_name = query.replace('play', '').replace('mp3', '').replace('song', '').replace('video', '').lower().strip()
-    print(media_name)
     if 'mp3' in query or 'song' in query:
         search_song(music_path.get(), txt)
     else:

@@ -1,11 +1,13 @@
 import random
+import sqlite3
+
 from Speak import speak
 
 
 def who_are_you(query, txt):
     messages = [
-        "I am automate your loyal personal assistant.",
-        "automate, didn't I tell you before?",
+        "I am Automate your loyal personal assistant.",
+        "Automate, didn't I tell you before?",
         "You ask that so many times! I am automate."
     ]
     speak(random.choice(messages), txt)
@@ -20,15 +22,17 @@ def how_am_i(query, txt):
     replies = [
         'You are goddamn handsome!',
         'My knees go weak when I see you.',
-        'You are sexy!',
         'You look like the kindest person that I have met.'
     ]
     speak(random.choice(replies), txt)
 
 
 def who_am_i(query, txt):
-    name = 'Abhinav'
+    con=sqlite3.connect('automate.db')
+    cursor=con.cursor()
+    name = cursor.execute('SELECT * FROM current_user').fetchone()[0]
     speak('You are ' + name + ', a brilliant person.', txt)
+    con.close()
 
 
 def where_born(query, txt):
