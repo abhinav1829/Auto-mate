@@ -3,9 +3,11 @@ import urllib
 import webbrowser
 from datetime import datetime
 from tkinter import *
+from urllib.request import urlopen
 
 import pyowm
 import wikipedia as wiki
+from bs4 import BeautifulSoup
 from horoscope_generator import HoroscopeGenerator
 
 import GeneralConversations
@@ -165,6 +167,18 @@ def wikipedia(query, txt):
         speak(e, txt)
 
 
+def news(query, txt):
+    news_url = "https://news.google.com/news/rss"
+    client = urlopen(news_url)
+    xml_page = client.read()
+    client.close()
+    soup_page = BeautifulSoup(xml_page, "xml")
+    news_list = soup_page.findAll("item")
+    del news_list[3:]
+    for news_item in news_list:
+        speak(news_item.title.text, txt)
+
+
 def weather(query, txt):
     owm = pyowm.OWM('61cf9c73e72fb837f80c3e97ecd03a37')
     report = owm.weather_at_place('Pune')
@@ -219,6 +233,11 @@ def note(query, txt):
             speak('There is nothing to note.', txt)
             return
         set_note(query, txt)
+
+
+def repeat(query, txt):
+    from Speak import repeat_text
+    speak(repeat_text, txt)
 
 
 def bye(query, txt):

@@ -1,8 +1,8 @@
 import datetime
 
+import Actions
 from Input import take_command
 from Speak import speak
-import Actions
 
 flag = True
 
@@ -27,13 +27,15 @@ def listen(txt):
     dictionary = dict([('playmedia', ['play', 'music', 'mp3', 'song', 'video']),
                        ('movie', ['play', 'movie', 'movies']),
                        ('google', ['google', 'search', 'web', 'worldwideweb', 'internet']),
-                       ('youtube', ['youtube', 'play', 'video', 'videos', 'search', 'entertainment']),
+                       ('youtube', ['youtube', 'play', 'video', 'videos', 'entertainment']),
                        ('wikipedia', ['wikipedia', 'encyclopedia', 'search', 'article', 'articles']),
                        ('weather', ['weather', 'temperature', 'climate']),
+                       ('news', ['news', 'headlines']),
                        ('daydatetime', ['day', 'date', 'time']),
                        ('horoscope', ['horoscope', 'fortune', 'luck']),
                        ('joke', ['joke', 'jokes', 'fun', 'funny']),
                        ('note', ['note', 'notes']),
+                       ('repeat', ['repeat', 'sorry', 'pardon']),
                        ('bye', ['goodbye', 'bye', 'byebye', 'sayonara', 'exit', 'close', 'tata'])])
 
     score = dict([('playmedia', 0),
@@ -41,11 +43,13 @@ def listen(txt):
                   ('google', 0),
                   ('youtube', 0),
                   ('wikipedia', 0),
+                  ('news', 0),
                   ('weather', 0),
                   ('daydatetime', 0),
                   ('horoscope', 0),
                   ('joke', 0),
                   ('note', 0),
+                  ('repeat', 0),
                   ('bye', 0)])
 
     query = take_command(txt).lower()

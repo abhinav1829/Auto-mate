@@ -9,9 +9,12 @@ tts = Dispatch("SAPI.SpVoice")
 tts.Voice = tts.GetVoices().Item(cur_user_voice)
 con.close()
 
+repeat_text = ''
+
 
 def speak(query, txt):
-    global tts
+    global tts, repeat_text
+    repeat_text = query
     txt.insert(INSERT, 'Automate : ')
     txt.insert(INSERT, query)
     txt.insert(INSERT, '\n')
