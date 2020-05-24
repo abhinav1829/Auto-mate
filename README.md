@@ -7,6 +7,7 @@ Features :-
 •	Play Youtube
 •	Search Wikipedia
 •	Play local media
-•	Weather Report
-•	Horoscope
+•	Weather report
+•	News headlines
+•	Notes
 •	General Conversations
