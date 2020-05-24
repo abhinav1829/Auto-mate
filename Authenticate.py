@@ -64,25 +64,38 @@ def del_entry(username_entry, password_entry):
 
 def login_initialize():
     login_root.title('Login')
-    username_label = Label(login_root, text='Username : ')
-    username_label.grid(row=0, column=0, sticky=N + S + E + W)
-    password_label = Label(login_root, text='Password : ')
-    password_label.grid(row=1, column=0, sticky=N + S + E + W)
 
-    username_entry = Entry(login_root)
-    username_entry.grid(row=0, column=1, sticky=N + S + E + W)
-    password_entry = Entry(login_root, show='*')
-    password_entry.grid(row=1, column=1, sticky=N + S + E + W)
+    login_frame = Frame(login_root, padx=10, pady=10)
+    login_frame.grid(row=0, column=0, sticky=N + S + E + W)
 
-    del_user_btn = Button(login_root, text='Del User',
-                          command=lambda: del_entry(username_entry.get(), password_entry.get()))
-    del_user_btn.grid(row=2, column=0, sticky=N + S + E + W)
-    signup_btn = Button(login_root, text='Sign Up',
-                        command=lambda: new_entry(username_entry.get(), password_entry.get()))
-    signup_btn.grid(row=2, column=1, sticky=N + S + E + W)
-    login_btn = Button(login_root, text='Login',
-                       command=lambda: check_credentials(username_entry.get(), password_entry.get()))
-    login_btn.grid(row=3, column=0, columnspan=2, sticky=N + S + E + W)
+    Label(login_frame, text='LOGIN', font=('', 35), pady=10).grid(row=0, column=0, sticky=N + S + E + W)
+    Label(login_frame, text='Username : ', font=('', 20), pady=5, padx=5).grid(row=1, column=0, sticky=N + S + E + W)
+    Label(login_frame, text='Password : ', font=('', 20), pady=5, padx=5).grid(row=2, column=0, sticky=N + S + E + W)
+
+    username_entry = Entry(login_frame, bd=5, font=('', 15))
+    username_entry.grid(row=1, column=1, sticky=N + S + E + W)
+    password_entry = Entry(login_frame, show='*', bd=5, font=('', 15))
+    password_entry.grid(row=2, column=1, sticky=N + S + E + W)
+
+    Button(
+        login_frame,
+        text='Del User',
+        bd=3, font=('', 15), padx=5, pady=5,
+        command=lambda: del_entry(username_entry.get(), password_entry.get())
+    ).grid(row=3, column=0, sticky=N + S + E + W)
+    Button(
+        login_frame,
+        text='Sign Up',
+        bd=3, font=('', 15), padx=5, pady=5,
+        command=lambda: new_entry(username_entry.get(), password_entry.get())
+    ).grid(row=3, column=1, sticky=N + S + E + W)
+    Button(
+        login_frame,
+        text='Login',
+        bd=3, font=('', 15), padx=5, pady=5,
+        command=lambda: check_credentials(username_entry.get(), password_entry.get())
+    ).grid(row=4, column=0, columnspan=2, sticky=N + S + E + W)
+
     login_root.mainloop()
 
 

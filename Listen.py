@@ -24,40 +24,38 @@ def listen(txt):
         wish_me(txt)
         flag = False
 
-    dictionary = dict([('playmedia', ['play', 'music', 'mp3', 'song', 'video']),
+    dictionary = dict([('play_media', ['play', 'music', 'mp3', 'song', 'video']),
                        ('movie', ['play', 'movie', 'movies']),
                        ('google', ['google', 'search', 'web', 'worldwideweb', 'internet']),
                        ('youtube', ['youtube', 'play', 'video', 'videos', 'entertainment']),
                        ('wikipedia', ['wikipedia', 'encyclopedia', 'search', 'article', 'articles']),
                        ('weather', ['weather', 'temperature', 'climate']),
                        ('news', ['news', 'headlines']),
-                       ('daydatetime', ['day', 'date', 'time']),
+                       ('day_date_time', ['day', 'date', 'time']),
                        ('horoscope', ['horoscope', 'fortune', 'luck']),
                        ('joke', ['joke', 'jokes', 'fun', 'funny']),
-                       ('note', ['note', 'notes']),
+                       ('note', ['note', 'notes', 'memorize']),
+                       ('email', ['mail', 'email']),
                        ('repeat', ['repeat', 'sorry', 'pardon']),
                        ('bye', ['goodbye', 'bye', 'byebye', 'sayonara', 'exit', 'close', 'tata'])])
 
-    score = dict([('playmedia', 0),
+    score = dict([('play_media', 0),
                   ('movie', 0),
                   ('google', 0),
                   ('youtube', 0),
                   ('wikipedia', 0),
                   ('news', 0),
                   ('weather', 0),
-                  ('daydatetime', 0),
+                  ('day_date_time', 0),
                   ('horoscope', 0),
                   ('joke', 0),
                   ('note', 0),
+                  ('email', 0),
                   ('repeat', 0),
                   ('bye', 0)])
 
     query = take_command(txt).lower()
     words = query.split(' ')
-
-    if words[0] == 'note' or words[0] == 'memorize':
-        Actions.note(query, txt)
-        return
 
     for word in words:
         for keyword in dictionary:

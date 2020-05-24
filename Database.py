@@ -40,9 +40,10 @@ def clear_notes(txt):
     speak('All notes have been erased.', txt)
 
 
-def update_users():
+def update_users(setting, value):
     con = sqlite3.connect('automate.db')
     cursor = con.cursor()
+    cursor.execute('UPDATE current_user SET ' + setting + '=' + value)
     username = cursor.execute('SELECT * FROM current_user').fetchone()[0]
     cursor.execute('DELETE FROM users WHERE username = "' + username + '"')
     cursor.execute('INSERT INTO users SELECT * FROM current_user')

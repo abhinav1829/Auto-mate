@@ -1,4 +1,5 @@
 import os
+import sqlite3
 import urllib
 import webbrowser
 from datetime import datetime
@@ -14,6 +15,8 @@ import GeneralConversations
 from Database import get_note, set_note, clear_notes
 from Input import take_command
 from Speak import speak
+
+from Email import initiate_email
 
 media_name = ''
 media_flag = False
@@ -97,7 +100,7 @@ def search_video(root, txt):
                     break
 
 
-def playmedia(query, txt):
+def play_media(query, txt):
     from Settings_Frame import music_path, video_path
     global media_name, media_flag
     media_flag = False
@@ -181,17 +184,22 @@ def news(query, txt):
 
 def weather(query, txt):
     owm = pyowm.OWM('61cf9c73e72fb837f80c3e97ecd03a37')
-    report = owm.weather_at_place('Pune')
+    con = sqlite3.connect('automate.db')
+    cursor = con.cursor()
+    location = cursor.execute('SELECT * FROM current_user').fetchone()[8]
+    con.close()
+    report = owm.weather_at_place(location)
     result = report.get_weather()
     detailed_status = result.get_detailed_status()
     temp = result.get_temperature(unit='celsius')
     weather_result = 'It is ' \
-                     + detailed_status + ' in Pune. The temperature is ' \
-                     + str(temp.get('temp')) + ' degrees celsius'
+                     + detailed_status + ' in ' \
+                     + location + '. The temperature is ' \
+                     + str(temp.get('temp')) + '° Celsius.'
     speak(weather_result, txt)
 
 
-def daydatetime(query, txt):
+def day_date_time(query, txt):
     if 'time' in query:
         speak("The time is " + datetime.strftime(datetime.now(), '%H:%M:%S'), txt)
     if 'date' in query:
@@ -233,6 +241,17 @@ def note(query, txt):
             speak('There is nothing to note.', txt)
             return
         set_note(query, txt)
+
+
+def email(query, txt):
+    status = initiate_email()
+    print('Hello')
+    if status == 1:
+        speak('The mail was sent successfully.', txt)
+    elif status == 0:
+        speak('I am sorry. The mail was not delivered. Server disconnected.', txt)
+    else:
+        speak('Processing error',txt)
 
 
 def repeat(query, txt):
