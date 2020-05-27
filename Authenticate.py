@@ -66,7 +66,7 @@ def login_initialize():
     login_root.title('Login')
 
     login_frame = Frame(login_root, padx=10, pady=10)
-    login_frame.grid(row=0, column=0, sticky=N + S + E + W)
+    login_frame.grid(row=0, column=0, sticky=N + E + W + S)
 
     Label(login_frame, text='LOGIN', font=('', 35), pady=10).grid(row=0, column=0, sticky=N + S + E + W)
     Label(login_frame, text='Username : ', font=('', 20), pady=5, padx=5).grid(row=1, column=0, sticky=N + S + E + W)

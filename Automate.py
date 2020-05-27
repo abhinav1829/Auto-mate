@@ -2,7 +2,7 @@ from tkinter import *
 
 from Menu_Frame import initf_menu
 from About_Frame import initf_about
-# from Authenticate import authenticate
+from Authenticate import authenticate
 from Automate_Frame import initf_automate
 from Settings_Frame import initf_settings
 
@@ -41,6 +41,6 @@ def initialize():
 
 
 if __name__ == '__main__':
-    # if not authenticate():
-    #     exit()
+    if not authenticate():
+        exit()
     initialize()

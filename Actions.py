@@ -6,6 +6,7 @@ from datetime import datetime
 from tkinter import *
 from urllib.request import urlopen
 
+import psutil
 import pyowm
 import wikipedia as wiki
 from bs4 import BeautifulSoup
@@ -13,10 +14,9 @@ from horoscope_generator import HoroscopeGenerator
 
 import GeneralConversations
 from Database import get_note, set_note, clear_notes
+from EmailLogin import EmailLogin
 from Input import take_command
 from Speak import speak
-
-from Email import initiate_email
 
 media_name = ''
 media_flag = False
@@ -28,11 +28,11 @@ joke_count = 0
 
 
 def general_conversation(query, txt):
-    dictionary = dict([('who_are_you', ['name', 'who', 'are', 'you', 'identification']),
+    dictionary = dict([('who_are_you', ['what', 'name', 'who', 'are', 'you', 'identification']),
                        ('toss_coin', ['heads', 'tails', 'flip', 'toss', 'coin']),
                        ('how_am_i', ['how', 'am', 'i', 'look', 'looking']),
                        ('who_am_i', ['who', 'am', 'i']),
-                       ('where_born', ['born', 'birth', 'made', 'created']),
+                       ('where_born', ['who', 'made', 'created', 'where', 'born', 'birth']),
                        ('how_are_you', ['how', 'are', 'you']),
                        ('are_you_up', ['you', 'up']),
                        ('love_you', ['love', 'you']),
@@ -244,14 +244,11 @@ def note(query, txt):
 
 
 def email(query, txt):
-    status = initiate_email()
-    print('Hello')
-    if status == 1:
-        speak('The mail was sent successfully.', txt)
-    elif status == 0:
-        speak('I am sorry. The mail was not delivered. Server disconnected.', txt)
-    else:
-        speak('Processing error',txt)
+    con = sqlite3.connect('automate.db')
+    cursor = con.cursor()
+    email_id = cursor.execute('SELECT * FROM current_user').fetchone()[7]
+    con.close()
+    EmailLogin(email_id, Toplevel(), txt)
 
 
 def repeat(query, txt):
@@ -261,5 +258,8 @@ def repeat(query, txt):
 
 def bye(query, txt):
     speak('Goodbye', txt)
-    os.system("taskkill /im chrome.exe")
+    for process in psutil.process_iter():
+        proc_name = process.name()
+        if proc_name == 'chrome.exe':
+            process.kill()
     exit()

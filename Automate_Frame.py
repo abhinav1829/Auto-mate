@@ -1,4 +1,6 @@
 from tkinter import *
+from tkinter import PhotoImage
+
 from Listen import listen
 
 
@@ -15,7 +17,9 @@ def initf_automate(f_automate):
 
     Grid.rowconfigure(panel, 0, weight=1)
     Grid.columnconfigure(panel, 0, weight=1)
-    listen_btn = Button(panel, text='Listen', command=lambda: listen(txt))
+    icon: PhotoImage = PhotoImage(file="microphone.png")
+    listen_btn = Button(panel, text='Listen', command=lambda: listen(txt), image=icon, height=20, width=20)
+    listen_btn.image = icon
     listen_btn.grid(row=0, column=0, sticky=N + S + E + W)
 
     Grid.rowconfigure(panel, 1, weight=1)

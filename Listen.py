@@ -1,4 +1,5 @@
 import datetime
+from tkinter import END
 
 import Actions
 from Input import take_command
@@ -20,13 +21,17 @@ def wish_me(txt):
 
 def listen(txt):
     global flag
+
+    txt.delete('1.0', END)
+    txt.update()
+
     if flag:
         wish_me(txt)
         flag = False
 
     dictionary = dict([('play_media', ['play', 'music', 'mp3', 'song', 'video']),
                        ('movie', ['play', 'movie', 'movies']),
-                       ('google', ['google', 'search', 'web', 'worldwideweb', 'internet']),
+                       ('google', ['google', 'search', 'web', 'internet']),
                        ('youtube', ['youtube', 'play', 'video', 'videos', 'entertainment']),
                        ('wikipedia', ['wikipedia', 'encyclopedia', 'search', 'article', 'articles']),
                        ('weather', ['weather', 'temperature', 'climate']),
@@ -37,15 +42,15 @@ def listen(txt):
                        ('note', ['note', 'notes', 'memorize']),
                        ('email', ['mail', 'email']),
                        ('repeat', ['repeat', 'sorry', 'pardon']),
-                       ('bye', ['goodbye', 'bye', 'byebye', 'sayonara', 'exit', 'close', 'tata'])])
+                       ('bye', ['goodbye', 'bye', 'exit', 'close'])])
 
     score = dict([('play_media', 0),
                   ('movie', 0),
                   ('google', 0),
                   ('youtube', 0),
                   ('wikipedia', 0),
-                  ('news', 0),
                   ('weather', 0),
+                  ('news', 0),
                   ('day_date_time', 0),
                   ('horoscope', 0),
                   ('joke', 0),

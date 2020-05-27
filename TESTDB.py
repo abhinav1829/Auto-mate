@@ -1,7 +1,7 @@
-import sqlite3
-
-con=sqlite3.connect('automate.db')
-cursor=con.cursor()
+# import sqlite3
+#
+# con=sqlite3.connect('automate.db')
+# cursor=con.cursor()
 # rows=cursor.execute('UPDATE users SET email_id = "shreyashtalwekar649@gmail.com" WHERE username="shreyash"')
 # rows=cursor.execute('SELECT sql FROM sqlite_master WHERE name="users"')
 # cursor.execute(
@@ -17,34 +17,8 @@ cursor=con.cursor()
 #     'location TEXT DEFAULT "Pune"'
 #     ')'
 # )
-# cursor.execute(
-#     'INSERT INTO current_user VALUES('
-#     '"abhinav",'
-#     '"abhi1829",'
-#     '0,'
-#     '0,'
-#     '"G:/Music",'
-#     '"G:/VDOS/Music",'
-#     '"G:/Movies",'
-#     '"abhinow63@gmail.com",'
-#     '"Nagpur"'
-#     ')'
-# )
-# cursor.execute(
-#     'INSERT INTO users VALUES('
-#     '"shreyash",'
-#     '"shreyash",'
-#     '0,'
-#     '0,'
-#     '"G:/Music",'
-#     '"G:/VDOS/Music",'
-#     '"G:/Movies",'
-#     '"shreyashtalwekar649@gmail.com",'
-#     '"Wardha"'
-#     ')'
-# )
 # cursor.execute('DROP TABLE current_user')
 # for row in rows:
 #     print(row)
-con.commit()
-con.close()
+# con.commit()
+# con.close()
