@@ -5,6 +5,7 @@ Features :-
 
 •	Google search
 •	Play Youtube
+•	Send Email
 •	Search Wikipedia
 •	Play local media
 •	Weather report
